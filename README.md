@@ -4,7 +4,7 @@ This repo includes:
 - A CloudFormation template to create a read-only IAM role.
 - A Python script to fetch AWS inventory (EC2 instances and S3 buckets for now ) using the Stack Name.
 - A launch-ready CloudFormation stack URL.
-- Steps used for the creation for all of this 
+- Steps used for the creation of all this
 
 ---
 
@@ -27,7 +27,7 @@ This repo includes:
      
   4. Upload your .yaml file.
      
-  5. After upload, click on the file → Copy the `Object URL`
+  5. After upload, click on the file and copy the `Object URL`
      
 ### Step 3: Deploy the CloudFormation Stack
 
@@ -44,11 +44,15 @@ This will create an IAM Role named `TaskForWibix` with read-only access to EC2, 
 ##  Run the Python Script
 
 1. Save this python file on your device.
+2. Install the requirements using the following command:
+  ```bash 
+   pip install -r requirements.txt
+  ```
 
-2. Run it inside a terminal of your desired choice by using the following command :
+3. Run it inside a terminal of your choice by using the following command :
 
 ```bash
 python3 fetchdeets.py
-
+```
 
 
