@@ -1,4 +1,4 @@
-#  AWS Read-Only Access Stack with Inventory Fetch Script
+#  Task For Wibix
 
 This repo includes:
 - A CloudFormation template to create a read-only IAM role.
