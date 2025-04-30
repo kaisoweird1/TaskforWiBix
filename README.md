@@ -48,7 +48,7 @@ This will create an IAM Role named `TaskForWibix` with read-only access to EC2, 
 2. Run it inside a terminal of your desired choice by using the following command :
 
 ```bash
-python3 fetch_inventory.py
+python3 fetchdeets.py
 
 
 
