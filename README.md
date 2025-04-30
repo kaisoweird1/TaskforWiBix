@@ -33,11 +33,11 @@ This repo includes:
 
 1. Use this link to deploy the stack in AWS:
    
- https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?templateURL=https://bucketforrat.s3.us-west-1.amazonaws.com/RAT.yaml&stackName=TaskForWixStack
+ https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/create/review?templateURL=https://bucketforrat.s3.us-west-1.amazonaws.com/RAT.yaml&stackName=TaskForWibix
 
 2. Check the acknowledgment box and click **Create Stack**.
 
-This will create an IAM Role named `TaskForWix` with read-only access to EC2, S3, and other AWS services.
+This will create an IAM Role named `TaskForWibix` with read-only access to EC2, S3, and other AWS services.
 
 ---
 
