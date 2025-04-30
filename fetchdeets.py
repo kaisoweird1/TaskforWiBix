@@ -1,54 +1,78 @@
 import boto3
+from botocore.exceptions import BotoCoreError, ClientError
 
-# this function fetches the resources from the stack
-def get_stack_resources(stack_name):
+
+STACK_NAME = "TaskForWibix"
+
+
+def get_stack_resource_types(stack_name):
+
+##   Retrieves all resource types from the specified CloudFormation stack
     cf = boto3.client('cloudformation')
     response = cf.describe_stack_resources(StackName=stack_name)
     return [res['ResourceType'] for res in response['StackResources']]
 
-# this function extracts the names from the tags from EC2 instance tags
-def get_instance_name(tags):
+
+def extract_instance_name(tags):
+
+   ## Extracts the Name tag from EC2 instance tags
     if tags:
         for tag in tags:
-            if tag['Key'] == 'Name':
+            if tag['Key'].lower() == 'name':
                 return tag['Value']
-    return "No name specified"
+    return "Unnamed"
 
-# this function lists the ec2 instances and s3 buckets in the account
-def list_inventory():
+def list_ec2_instances():
+ 
+    ##Lists all EC2 instances with their ID, name, and state
+
     ec2 = boto3.client('ec2')
+    print("\nEC2 Instances:")
+    try:
+        reservations = ec2.describe_instances()['Reservations']
+        if not reservations:
+            print("No EC2 instances found.")
+            return
+
+        for reservation in reservations:
+            for instance in reservation['Instances']:
+                instance_id = instance['InstanceId']
+                state = instance['State']['Name']
+                name = extract_instance_name(instance.get('Tags', []))
+                print(f"- ID: {instance_id}, Name: {name}, State: {state}")
+    except (BotoCoreError, ClientError) as e:
+        print(f"Error fetching EC2 instances: {e}")
+
+
+def list_s3_buckets():
+
+    ##Lists all S3 buckets in the account
+
     s3 = boto3.client('s3')
+    print("\nS3 Buckets:")
+    try:
+        buckets = s3.list_buckets().get('Buckets', [])
+        if not buckets:
+            print("No S3 buckets found.")
+            return
 
-    print("EC2 Instances:")
-    reservations = ec2.describe_instances()['Reservations']
-    if reservations:
-        for res in reservations:
-            for inst in res['Instances']:
-                instance_id = inst['InstanceId']
-                state = inst['State']['Name']
-                name = get_instance_name(inst.get('Tags', []))
-                print(f"Instance ID: {instance_id}, Name: {name}, State: {state}")
-    else:
-        print("No EC2 instances found.")
-
-    print("S3 Buckets:")
-    buckets = s3.list_buckets()['Buckets']
-    if buckets:
         for bucket in buckets:
-            print(f"Bucket Name: {bucket['Name']}")
-    else:
-        print("No S3 buckets found.")
+            print(f"- {bucket['Name']}")
+    except (BotoCoreError, ClientError) as e:
+        print(f"Error fetching S3 buckets: {e}")
+
 
 def main():
-    stack_name = "TaskForWixStack"  
-    print(f"Fetching resources for stack: {stack_name}")
+    print(f"Fetching resources in stack: {STACK_NAME}")
 
     try:
-        resources = get_stack_resources(stack_name)
-        print(f"Resources found in stack: {resources}")
-        list_inventory()
-    except Exception as e:
-        print(f"Error: {e}")
+        resource_types = get_stack_resource_types(STACK_NAME)
+        print(f"Stack contains resources: {resource_types}")
+
+        list_ec2_instances()
+        list_s3_buckets()
+    except (BotoCoreError, ClientError) as e:
+        print(f"Error accessing CloudFormation stack: {e}")
 
 if __name__ == "__main__":
     main()
